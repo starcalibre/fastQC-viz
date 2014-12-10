@@ -17,7 +17,7 @@ make install # ok, fine, this step probably takes more than 30 seconds...
 curl https://www.npmjs.org/install.sh | sh
 ```
 
-Next you'll need [Bower], a great web package manager.
+Next you'll need [Bower], a great web package manager. This is installed via ```npm```, the node.js package manager that comes with node.
 
 ```npm install -g bower```
 

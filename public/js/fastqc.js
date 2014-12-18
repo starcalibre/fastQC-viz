@@ -49,8 +49,8 @@ document.getElementById('file').onchange = function(){
         }
         fastqc_object['Per base sequence quality'] = qual_module;
       }
-    console.log(fastqc_object);
     }
+    console.log(fastqc_object);
   };
   reader.readAsText(file);
 };

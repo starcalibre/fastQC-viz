@@ -1,3 +1,23 @@
+/* Page Custom CSS */
+
 .navbar-inverse {
     border-radius: 0 !important;
+}
+
+#plot-box {
+    text-align: center;
+}
+
+/* Box Plot Custom CSS */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.label,
+.axis text {
+    font-family: sans-serif;
+    font-size: 12px;
 }

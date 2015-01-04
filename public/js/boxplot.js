@@ -24,11 +24,12 @@ BoxPlot.prototype.height = function(value) {
 };
 
 BoxPlot.prototype.drawBox = function(i, value) {
+  console.log(value);
 
   // add whiskers
   this.svg.append('line')
     .attr('x1', this.xScale(i+1))
-    .attr('y1', this.yScale(value['max']))
+    .attr('y1', this.yScale(value['90p']))
     .attr('x2', this.xScale(i+1))
     .attr('y2', this.yScale(value['3q']))
     .attr('stroke', 'black')
@@ -39,7 +40,7 @@ BoxPlot.prototype.drawBox = function(i, value) {
     .attr('x1', this.xScale(i+1))
     .attr('y1', this.yScale(value['1q']))
     .attr('x2', this.xScale(i+1))
-    .attr('y2', this.yScale(value['min']))
+    .attr('y2', this.yScale(value['10p']))
     .attr('stroke', 'black')
     .attr('stroke-width', this.strokeWidth)
     .classed('boxplot', true);
@@ -58,9 +59,9 @@ BoxPlot.prototype.drawBox = function(i, value) {
   // add min line
   this.svg.append('line')
     .attr('x1', this.xScale(i+1) - this.barWidth)
-    .attr('y1', this.yScale(value['min']))
+    .attr('y1', this.yScale(value['10p']))
     .attr('x2', this.xScale(i+1) + this.barWidth)
-    .attr('y2', this.yScale(value['min']))
+    .attr('y2', this.yScale(value['10p']))
     .attr('stroke', 'black')
     .attr('stroke-width', this.strokeWidth)
     .classed('boxplot', true);
@@ -68,9 +69,9 @@ BoxPlot.prototype.drawBox = function(i, value) {
   // add max line
   this.svg.append('line')
     .attr('x1', this.xScale(i+1) - this.barWidth)
-    .attr('y1', this.yScale(value['max']))
+    .attr('y1', this.yScale(value['90p']))
     .attr('x2', this.xScale(i+1) + this.barWidth)
-    .attr('y2', this.yScale(value['max']))
+    .attr('y2', this.yScale(value['90p']))
     .attr('stroke', 'black')
     .attr('stroke-width', this.strokeWidth)
     .classed('boxplot', true);
@@ -93,16 +94,21 @@ BoxPlot.prototype.render = function(data) {
   this.width = this.width - this.margin.left - this.margin.right;
   this.height = this.height - this.margin.top - this.margin.bottom;
 
+  // find max
+  var yMax = d3.max(data, function(d) {return d['90p']} );
+  var xMax = data.length;
+  // find min
+
   // define axis and scales
   // create 20 odd ticks on x axis
   this.xScale = d3.scale.linear()
-    .domain([0, 41])
+    .domain([0, xMax])
     .range([0, this.width]);
   this.xAxis = d3.svg.axis()
     .scale(this.xScale)
     .tickValues(function () {
       var ticks = [];
-      for(var i = 0; i < 20; i++) {
+      for(var i = 0; i < Math.floor(xMax/2); i++) {
         ticks.push(2*i+1)
       }
       return ticks;
@@ -110,11 +116,11 @@ BoxPlot.prototype.render = function(data) {
     .orient('bottom');
 
   this.yScale = d3.scale.linear()
-    .domain([0, 34])
+    .domain([0, yMax])
     .range([this.height, 0]);
   this.yAxis = d3.svg.axis()
     .scale(this.yScale)
-    .ticks(18)
+    .ticks(20)
     .orient('left');
 
   // setup canvas
@@ -127,6 +133,7 @@ BoxPlot.prototype.render = function(data) {
 
   // call drawBox function on each object in data array
   for(var i = 0; i < data.length; i++) {
+    console.log(data[i]);
     this.drawBox(i, data[i]);
   }
 

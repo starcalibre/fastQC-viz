@@ -24,8 +24,6 @@ BoxPlot.prototype.height = function(value) {
 };
 
 BoxPlot.prototype.drawBox = function(i, value) {
-  console.log(value);
-
   // add whiskers
   this.svg.append('line')
     .attr('x1', this.xScale(i+1))
@@ -133,7 +131,6 @@ BoxPlot.prototype.render = function(data) {
 
   // call drawBox function on each object in data array
   for(var i = 0; i < data.length; i++) {
-    console.log(data[i]);
     this.drawBox(i, data[i]);
   }
 

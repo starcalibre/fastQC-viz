@@ -7,7 +7,7 @@ function FastQCParser(fileContents) {
 
 FastQCParser.prototype.parseQC = function() {
   var lines = this.fileContents.split('\n');
-  this. modules = {};
+  this.modules = {};
 
   for(var i = 0; i < lines.length; i++) {
     var curLine = lines[i].split('\t');

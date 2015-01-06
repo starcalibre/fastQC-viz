@@ -29,6 +29,6 @@ function loadEnd(event) {
   var fileContents = event.target.result;
   var fastQCFile = new FastQCParser(fileContents);
   fastQCFile.parseQC();
-  console.log(fastQCFile.modules.qual.quintiles);
+  console.log(fastQCFile);
   boxPlot.render(fastQCFile.modules.qual.quintiles);
 }

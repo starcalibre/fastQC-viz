@@ -2,7 +2,7 @@
 
 function BoxPlot() {
   this.strokeWidth = 0.75;
-  this.barWidth = 4;
+  this.barWidth = 3;
 }
 
 BoxPlot.prototype.bindTo = function(value) {
@@ -95,7 +95,6 @@ BoxPlot.prototype.render = function(data) {
   // find max
   var yMax = d3.max(data, function(d) {return d['90p']} );
   var xMax = data.length;
-  // find min
 
   // define axis and scales
   // create 20 odd ticks on x axis
@@ -120,6 +119,11 @@ BoxPlot.prototype.render = function(data) {
     .scale(this.yScale)
     .ticks(20)
     .orient('left');
+
+  // remove any existing plots before rendering
+  if(this.svg) {
+    this.svg.remove();
+  }
 
   // setup canvas
   this.svg = d3.select(this.element).append('svg')

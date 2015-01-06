@@ -1,8 +1,17 @@
 // create boxplot object, and send it to the #plotbox div
-var boxPlot = new BoxPlot()
-  .bindTo('#plot-box')
-  .width(800)
+var linePlot = new LinePlot()
+  .bindTo('#line-plot')
+  .width(600)
   .height(400);
+
+console.log(linePlot);
+
+var boxPlot = new BoxPlot()
+  .bindTo('#box-plot')
+  .width(600)
+  .height(400);
+
+console.log(boxPlot);
 
 // setup listener and handlers for file reading file
 document.getElementById('file').onchange = function(){
@@ -30,5 +39,6 @@ function loadEnd(event) {
   var fastQCFile = new FastQCParser(fileContents);
   fastQCFile.parseQC();
   console.log(fastQCFile);
+  linePlot.render(fastQCFile.modules.qual.quintiles);
   boxPlot.render(fastQCFile.modules.qual.quintiles);
 }

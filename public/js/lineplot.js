@@ -1,5 +1,6 @@
 function LinePlot() {
   this.strokeWidth = 0.75;
+  this.margin = {top: 30, right: 30, bottom: 40, left: 30};
 }
 
 LinePlot.prototype.bindTo = function(value) {
@@ -10,22 +11,19 @@ LinePlot.prototype.bindTo = function(value) {
 
 LinePlot.prototype.width = function(value) {
   if(!arguments.length) { return value }
-  this.width = value;
+  this.width = value - this.margin.left - this.margin.right;
   return this
 };
 
 LinePlot.prototype.height = function(value) {
   if(!arguments.length) { return value }
-  this.height = value;
+  this.height = value - this.margin.top - this.margin.bottom;
   return this
 };
 
 LinePlot.prototype.render = function(data) {
-
-  // define width/height with margins
-  this.margin = {top: 30, right: 30, bottom: 40, left: 30};
-  this.width = this.width - this.margin.left - this.margin.right;
-  this.height = this.height - this.margin.top - this.margin.bottom;
+  // remove any existing plots before rendering
+  $(this.element).empty();
 
   // find max
   var yMax = d3.max(data, function(d) {return d['90p']} );
@@ -54,11 +52,6 @@ LinePlot.prototype.render = function(data) {
     .scale(yScale)
     .ticks(20)
     .orient('left');
-
-  // remove any existing plots before rendering
-  if(this.svg) {
-    this.svg.remove();
-  }
 
   // setup canvas
   this.svg = d3.select(this.element).append('svg')

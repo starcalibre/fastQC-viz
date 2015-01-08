@@ -3,6 +3,7 @@
 function BoxPlot() {
   this.strokeWidth = 0.75;
   this.barWidth = 3;
+  this.margin = {top: 30, right: 30, bottom: 40, left: 30};
 }
 
 BoxPlot.prototype.bindTo = function(value) {
@@ -13,13 +14,13 @@ BoxPlot.prototype.bindTo = function(value) {
 
 BoxPlot.prototype.width = function(value) {
   if(!arguments.length) { return value }
-  this.width = value;
+  this.width = value - this.margin.left - this.margin.right;
   return this
 };
 
 BoxPlot.prototype.height = function(value) {
   if(!arguments.length) { return value }
-  this.height = value;
+  this.height = value - this.margin.top - this.margin.bottom;
   return this
 };
 
@@ -87,10 +88,10 @@ BoxPlot.prototype.drawBox = function(i, value) {
 
 BoxPlot.prototype.render = function(data) {
 
-  // define width/height with margins
-  this.margin = {top: 30, right: 30, bottom: 40, left: 30};
-  this.width = this.width - this.margin.left - this.margin.right;
-  this.height = this.height - this.margin.top - this.margin.bottom;
+  console.log(data);
+
+  // remove any existing plots before rendering
+  $(this.element).empty();
 
   // find max
   var yMax = d3.max(data, function(d) {return d['90p']} );
@@ -119,11 +120,6 @@ BoxPlot.prototype.render = function(data) {
     .scale(this.yScale)
     .ticks(20)
     .orient('left');
-
-  // remove any existing plots before rendering
-  if(this.svg) {
-    this.svg.remove();
-  }
 
   // setup canvas
   this.svg = d3.select(this.element).append('svg')

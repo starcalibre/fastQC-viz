@@ -30,40 +30,74 @@
                     <a href="#">About</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
         </div>
     </div>
 </nav>
 <!-- PAGE CONTENT -->
 <div class="container">
+    <!-- TAB NAVIGATION -->
     <div class="row">
         <div class="text-center">
-            <h1>FastQC-viz</h1>
-            <p class="lead">Visualisation and exploration of multiple FastQC files.</p>
             <ul class="nav nav-tabs nav-justified">
-                <li role="presentation" class="active"><a href="#">Per Base Sequence Quality</a></li>
-                <li role="presentation"><a href="#">Per Sequence Quality Scores</a></li>
-                <li role="presentation"><a href="#">Per Base GC Content</a></li>
+                <li role="presentation" class="active">
+                    <a href="#upload" data-toggle="tab">
+                        Upload Files
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#basic" data-toggle="tab">
+                        Basic Statistics
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#base-quality" data-toggle="tab">
+                        Per Base Sequence Quality
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#seq-quality" data-toggle="tab">
+                        Per Sequence Quality Scores
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#base-gc" data-toggle="tab">
+                        Per Base GC Content
+                    </a>
+                </li>
             </ul>
+
+        </div>
+    </div>
+    <!-- TAB CONTENT -->
+    <div id="tabContent" class="tab-content">
+        <! -- UPLOAD FILES TAB -->
+        <div class="tab-pane fade in active" id="upload">
+            <p>UPLOAD FILES</p>
             <p><input type="file" name="file" id="file"></p>
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div id="line-plot"></div>
+        <! -- BASIC STATISTICS TAB -->
+        <div class="tab-pane fade" id="basic">
+            <p>BASIC STATISTICS TAB</p>
         </div>
-        <div class="col-lg-6">
-            <div id="box-plot"></div>
+        <! -- PER BASE SEQUENCE QUALITY TAB -->
+        <div class="tab-pane fade" id="base-quality">
+            <p>PER BASE SEQUENCE QUALITY</p>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="line-plot"></div>
+                </div>
+                <div class="col-lg-6">
+                    <div id="box-plot"></div>
+                </div>
+            </div>
+        </div>
+        <! -- PER SEQUENCE QUALITY TAB -->
+        <div class="tab-pane fade" id="seq-quality">
+            <p>PER SEQUENCE QUALITY TAB</p>
+        </div>
+        <! -- PER BASE GC CONTENT TAB -->
+        <div class="tab-pane fade" id="base-gc">
+            <p>PER BASE GC CONTENT TAB</p>
         </div>
     </div>
 </div>

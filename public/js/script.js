@@ -27,6 +27,35 @@ function errorHandler(event) {
   console.log(event);
 }
 
+function parseBasicInfo(basic_data) {
+  /* Determine the length of the fastQCFile.modules.basic 
+  array, loop over the array, adding a completed <tr></tr> 
+  for each object in array. */
+
+  // setup table that will be inserted into the DOM
+  var basic_table_HTML = '<table class="table table-striped">\n' + 
+                         "<th>Tag</th>\n" +
+                         "<th>Data</th>\n"
+
+  // find array length and enumerate attribute keys
+  var modules_basic_array_length = Object.keys(basic_data).length;
+  var modules_basic_array_obj_names = Object.keys(basic_data);
+  
+  for (var i = 0; i < modules_basic_array_length; i++) {
+    attribute_name = modules_basic_array_obj_names[i];
+    basic_table_HTML += "<tr>";
+    basic_table_HTML += "<td>" + modules_basic_array_obj_names[i] + "</td>";
+    basic_table_HTML += "<td>" + basic_data[attribute_name] + "</td>";
+    basic_table_HTML += "</tr>";
+  }
+  
+  // close the table
+  basic_table_HTML += "</table>\n";
+
+  // output the table to the DOM
+  $('#basic-table-insert').replaceWith(basic_table_HTML);
+}
+
 function loadStart(event) {
   console.log('file loading');
 }
@@ -41,4 +70,5 @@ function loadEnd(event) {
   console.log(fastQCFile);
   linePlot.render(fastQCFile.modules.qual.quintiles);
   boxPlot.render(fastQCFile.modules.qual.quintiles);
+  parseBasicInfo(fastQCFile.modules.basic)
 }

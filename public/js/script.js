@@ -27,33 +27,34 @@ function errorHandler(event) {
   console.log(event);
 }
 
-function parseBasicInfo(basic_data) {
-  /* Determine the length of the fastQCFile.modules.basic 
-  array, loop over the array, adding a completed <tr></tr> 
-  for each object in array. */
+function insertBasicTable(basic_data, insert_id) {
+  /* Insert the key/value pairs into a table element on the DOM.
 
-  // setup table that will be inserted into the DOM
-  var basic_table_HTML = '<table class="table table-striped">\n' + 
-                         "<th>Tag</th>\n" +
-                         "<th>Data</th>\n"
-
-  // find array length and enumerate attribute keys
-  var modules_basic_array_length = Object.keys(basic_data).length;
-  var modules_basic_array_obj_names = Object.keys(basic_data);
+  basic_data = object containing key/value pairs
+  insert_id  = the id on the DOM to insert the table into 
   
-  for (var i = 0; i < modules_basic_array_length; i++) {
-    attribute_name = modules_basic_array_obj_names[i];
-    basic_table_HTML += "<tr>";
-    basic_table_HTML += "<td>" + modules_basic_array_obj_names[i] + "</td>";
-    basic_table_HTML += "<td>" + basic_data[attribute_name] + "</td>";
-    basic_table_HTML += "</tr>";
+  Intentionally not including closing tags in the jquery requests;
+  http://stackoverflow.com/a/14737115/2355035 */
+
+  table_id = '#' + insert_id;
+  var array_length = Object.keys(basic_data).length;
+  var array_obj_names = Object.keys(basic_data);
+
+  // create the table header
+  $(table_id).empty();
+  $(table_id).append('<thead>');
+  $(table_id).find('thead:last').append('<th>Tag');
+  $(table_id).find('thead:last').append('<th>Data');
+
+  // begin the table body and iterate through key/value pairs
+  $(table_id).append('<tbody>');
+  for (var i = 0; i < array_length; i++) {
+    var attr_name = array_obj_names[i];
+    var tag       = '<td>' + array_obj_names[i];
+    var data      = '<td>' + basic_data[attr_name];
+
+    $(table_id).find('tbody:last').append('<tr>' + tag + data);
   }
-  
-  // close the table
-  basic_table_HTML += "</table>\n";
-
-  // output the table to the DOM
-  $('#basic-table-insert').replaceWith(basic_table_HTML);
 }
 
 function loadStart(event) {
@@ -70,5 +71,5 @@ function loadEnd(event) {
   console.log(fastQCFile);
   linePlot.render(fastQCFile.modules.qual.quintiles);
   boxPlot.render(fastQCFile.modules.qual.quintiles);
-  parseBasicInfo(fastQCFile.modules.basic)
+  insertBasicTable(fastQCFile.modules.basic, 'basic-stats-table');
 }

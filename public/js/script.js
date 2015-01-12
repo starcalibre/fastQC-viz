@@ -27,6 +27,37 @@ function errorHandler(event) {
   console.log(event);
 }
 
+function insertBasicTable(basic_data, insert_id) {
+  /* Insert the key/value pairs into a table element on the DOM.
+
+  basic_data = object containing key/value pairs
+  insert_id  = the id on the DOM to insert the table into 
+  
+  Intentionally not including closing tags in the jquery requests;
+  http://stackoverflow.com/a/14737115/2355035 */
+
+  table_id = '#' + insert_id;
+  var array_length = Object.keys(basic_data).length;
+  var array_obj_names = Object.keys(basic_data);
+
+  // create the table header
+  $(table_id).empty();
+  $(table_id).append('<thead>');
+  $(table_id).append('<tr>')
+  $(table_id).find('thead:last').append('<th>Tag');
+  $(table_id).find('thead:last').append('<th>Data');
+
+  // begin the table body and iterate through key/value pairs
+  $(table_id).append('<tbody>');
+  for (var i = 0; i < array_length; i++) {
+    var attr_name = array_obj_names[i];
+    var tag       = '<td>' + array_obj_names[i];
+    var data      = '<td>' + basic_data[attr_name];
+
+    $(table_id).find('tbody:last').append('<tr>' + tag + data);
+  }
+}
+
 function loadStart(event) {
   console.log('file loading');
 }
@@ -41,4 +72,5 @@ function loadEnd(event) {
   console.log(fastQCFile);
   linePlot.render(fastQCFile.modules.qual.quintiles);
   boxPlot.render(fastQCFile.modules.qual.quintiles);
+  insertBasicTable(fastQCFile.modules.basic, 'basic-stats-table');
 }

@@ -43,6 +43,7 @@ function insertBasicTable(basic_data, insert_id) {
   // create the table header
   $(table_id).empty();
   $(table_id).append('<thead>');
+  $(table_id).append('<tr>')
   $(table_id).find('thead:last').append('<th>Tag');
   $(table_id).find('thead:last').append('<th>Data');
 

@@ -1,5 +1,14 @@
 /* Page Custom CSS */
 
+#file-selector {
+    display: none;
+}
+
+.top-buffer {
+    margin-top:20px;
+}
+
+
 .navbar-inverse {
     border-radius: 0 !important;
 }

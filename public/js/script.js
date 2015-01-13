@@ -1,31 +1,97 @@
-// create boxplot object, and send it to the #plotbox div
+/* MULTIPLE FILE UPLOADER */
+
+var fileArray = [];
+var fastQCObjects = [];
+
+$('#file-selector').change(function() {
+  fastQCObjects = [];
+  for(var i = 0; i < this.files.length; i++) {
+    fileArray.push(this.files[i]);
+  }
+  createTable(fileArray);
+});
+
+function createTable(fileArray) {
+  $('#file-table').empty();
+
+  // create headers
+  $('#file-table').append('<tbody></tbody>');
+  $('#file-table').find('tbody:last').append('<th>File Name</th> ' +
+  '<th>Size</th> <th></th>');
+
+  //create rows
+  for(var i = 0; i < fileArray.length; i++) {
+    $('#file-table').find('tbody:last').append('<tr><td>' +
+    fileArray[i]['name'] +'</td><td>' + bytesToKb(fileArray[0]['size']) + '</td>' +
+    '<td><button type="button" ' + 'class="btn btn-danger remove-button">' +
+    'Remove</button></td></tr>');
+  }
+
+  //append listener for removal button
+  $('#file-table .remove-button').on("click",function() {
+    var tr = $(this).closest('tr');
+    var index = tr[0].rowIndex;
+    tr.fadeOut(400, function(){
+      tr.remove();
+    });
+    // remove entry from files variable
+    fileArray.splice(index, 1);
+
+    // remove whole table if final row removed
+    if (fileArray.length === 0) {
+      $('#file-table').empty()
+    }
+    return false;
+  });
+};
+
+function bytesToKb(bytes) {
+  var kb = (bytes/1024).toFixed(2);
+  return kb.toString() + 'KB';
+}
+
+$('#reset-button').on('click', function() {
+  fileArray = [];
+  fastQCObjects = [];
+  $('#file-table').empty();
+});
+
+$('#submit-button').on('click', function() {
+  if(fileArray.length === 0) {
+    alert('There\'s no files to submit! :C');
+  }
+  else {
+    for(var i = 0; i < fileArray.length; i++) {
+      (function(file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          var text = event.target.result;
+          var fastQC = new FastQCParser(text);
+          fastQC.parseQC();
+          fastQCObjects.push(fastQC);
+        };
+        reader.readAsText(file, "UTF-8");
+      })(fileArray[i]);
+    }
+    window.setTimeout(function() {
+      // TODO send array of parsed QC files to renderers
+    }, 1);
+  }
+});
+
+/* SETUP PLOTS */
+
 var linePlot = new LinePlot()
   .bindTo('#line-plot')
   .width(600)
   .height(400);
-
-console.log(linePlot);
 
 var boxPlot = new BoxPlot()
   .bindTo('#box-plot')
   .width(600)
   .height(400);
 
-console.log(boxPlot);
-
-// setup listener and handlers for file reading file
-document.getElementById('file').onchange = function(){
-  var file = this.files[0];
-  var reader = new FileReader();
-  reader.readAsText(file);
-  reader.onerror = errorHandler;
-  reader.onloadstart = loadStart;
-  reader.onloadend = loadEnd;
-};
-
-function errorHandler(event) {
-  console.log(event);
-}
+/* SETUP BASIC TABLE TABLE */
 
 function insertBasicTable(basic_data, insert_id) {
   /* Insert the key/value pairs into a table element on the DOM.
@@ -58,19 +124,4 @@ function insertBasicTable(basic_data, insert_id) {
   }
 }
 
-function loadStart(event) {
-  console.log('file loading');
-}
 
-function loadEnd(event) {
-  /* when text file is loaded, parse the contents
-  and send the quality results to the D3 function that
-  renders the boxplot */
-  var fileContents = event.target.result;
-  var fastQCFile = new FastQCParser(fileContents);
-  fastQCFile.parseQC();
-  console.log(fastQCFile);
-  linePlot.render(fastQCFile.modules.qual.quintiles);
-  boxPlot.render(fastQCFile.modules.qual.quintiles);
-  insertBasicTable(fastQCFile.modules.basic, 'basic-stats-table');
-}

@@ -74,8 +74,22 @@
     <div id="tabContent" class="tab-content">
         <!-- UPLOAD FILES TAB -->
         <div class="tab-pane fade in active" id="upload">
-            <p>UPLOAD FILES</p>
-            <p><input type="file" name="file" id="file"></p>
+            <div class="row top-buffer">
+                <label class="btn btn-primary" for="file-selector">
+                    <input id="file-selector" type="file" multiple>
+                    Add Files For Upload
+                </label>
+                <button type="button" class="btn btn-warning" id="reset-button">
+                    Reset Selection
+                </button>
+                <button type="button" class="btn btn-success" id="submit-button">
+                    Submit Files
+                </button>
+            </div>
+            <div class="row">
+                <table class="table table-striped" id="file-table">
+                </table>
+            </div>
         </div>
         <!-- BASIC STATISTICS TAB -->
         <div class="tab-pane fade" id="basic">

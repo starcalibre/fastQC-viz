@@ -1,3 +1,13 @@
+function maxQuintile(fastQC) {
+  var max = 0;
+  for(var i = 0; i < fastQC.modules.qual.quintiles.length; i++) {
+    if (fastQC.modules.qual.quintiles[i]['90p'] > max) {
+      max = fastQC.modules.qual.quintiles[i]['90p'];
+    }
+  }
+  return max;
+}
+
 function LinePlot() {
   this.strokeWidth = 0.75;
   this.margin = {top: 30, right: 30, bottom: 40, left: 30};
@@ -25,13 +35,19 @@ LinePlot.prototype.render = function(data) {
   // remove any existing plots before rendering
   $(this.element).empty();
 
+  // [0].modules.qual.quintiles
+  var nLines = data.length;
+  console.log(data);
+
   // find max
-  var yMax = d3.max(data, function(d) {return d['90p']} );
-  var xMax = data.length;
+  var yMax = d3.max(data, function(d) {return maxQuintile(d);} );
+  var xMax = d3.max(data, function(d) {return d.modules.qual.quintiles.length;} );
+
+  // setup colour scale
+  var colourScale = d3.scale.category10();
 
   // define axis and scales
   // create 20 odd ticks on x axis
-
   this.xTicks = [];
   for(var i = 0; i < Math.floor(xMax/2); i++) {
     this.xTicks.push(2*i+1)
@@ -61,13 +77,17 @@ LinePlot.prototype.render = function(data) {
     .append('g')
     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
-  // create data for line
-  var lineData = [];
-  for(i = 0; i < data.length; i++) {
-    var point = [];
-    point.push(i+1);
-    point.push(data[i]['mean']);
-    lineData.push(point);
+  // create data for lines
+  var allLines = [];
+  for(var i = 0; i < nLines; i++) {
+    var newLine = [];
+    for(var j = 0; j < data[i].modules.qual.quintiles.length; j++) {
+      var newPoint = [];
+      newPoint.push(j+1);
+      newPoint.push(data[i].modules.qual.quintiles[j]['mean']);
+      newLine.push(newPoint);
+    }
+    allLines.push(newLine);
   }
 
   // line function
@@ -79,12 +99,28 @@ LinePlot.prototype.render = function(data) {
       return yScale(d[1])
     });
 
-  // append line to graph
-  this.svg.append('path')
-    .attr('d', line(lineData))
-    .attr('stroke', 'blue')
+  // append lines to graph
+  this.svg.selectAll('path')
+    .data(allLines)
+    .enter()
+    .append('path')
+    .attr('d', function(d) {
+      return line(d);
+    })
+    .attr('stroke', function(d, i) {
+      return colourScale(i);
+    })
     .attr('stroke-width', this.strokeWidth)
-    .attr('fill', 'none');
+    .attr('fill', 'none')
+    .style('opacity', 0.7)
+    .on('mouseover', function(d, i) {
+      d3.select(this)
+        .style('opacity', 1);
+    })
+    .on('mouseout', function(d, i) {
+      d3.select(this)
+        .style('opacity', 0.7);
+    });
 
   // append x and y axis
   this.svg.append('g')

@@ -74,9 +74,8 @@ $('#submit-button').on('click', function() {
       })(fileArray[i]);
     }
     window.setTimeout(function() {
-      console.log(fastQCObjects[0].modules.basic);
-      linePlot.render(fastQCObjects[0].modules.qual.quintiles);
-      boxPlot.render(fastQCObjects[0].modules.qual.quintiles);
+      linePlot.render(fastQCObjects);
+      //boxPlot.render(fastQCObjects[0].modules.qual.quintiles);
       insertBasicTable(fastQCObjects[0].modules.basic, 'basic-stats-table');
     }, 50);
   }

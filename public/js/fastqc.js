@@ -79,18 +79,18 @@ FastQCParser.prototype.parseQC = function() {
       var base_qual_module = {};
       base_qual_module['status'] = curLine[1];
       base_qual_module['base_percentages'] = [];
-      i += 2
+      i += 2;
       curLine = lines[i].split('\t');
 
       while (curLine[0] !== '>>END_MODULE') {
         var base_dist = {};
-        base_dist['base_num'] = curLine[0]
-        base_dist['G'] = curLine[1]
-        base_dist['A'] = curLine[2]
-        base_dist['T'] = curLine[3]
-        base_dist['C'] = curLine[4]
+        base_dist['base_num'] = +curLine[0];
+        base_dist['G'] = +curLine[1];
+        base_dist['A'] = +curLine[2];
+        base_dist['T'] = +curLine[3];
+        base_dist['C'] = +curLine[4];
         base_qual_module['base_percentages'].push(base_dist);
-        i += 1
+        i += 1;
         curLine = lines[i].split('\t');
       }
     }

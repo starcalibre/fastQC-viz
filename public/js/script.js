@@ -74,8 +74,11 @@ $('#submit-button').on('click', function() {
       })(fileArray[i]);
     }
     window.setTimeout(function() {
-      // TODO send array of parsed QC files to renderers
-    }, 1);
+      console.log(fastQCObjects[0].modules.basic);
+      linePlot.render(fastQCObjects[0].modules.qual.quintiles);
+      boxPlot.render(fastQCObjects[0].modules.qual.quintiles);
+      insertBasicTable(fastQCObjects[0].modules.basic, 'basic-stats-table');
+    }, 50);
   }
 });
 
